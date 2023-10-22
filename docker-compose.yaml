@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+    sqlserver:
+        environment:
+            - ACCEPT_EULA=Y
+            - 'MSSQL_SA_PASSWORD=myStrongPassword12#'
+        #network_mode: bazar
+        volumes:
+            - 'sqldata:/var/opt/mssql'
+        ports:
+            - '1433:1433'
+        container_name: sqlserver
+        image: mcr.microsoft.com/mssql/server
+        deploy:
+          resources:
+            reservations:
+              cpus: '2'
+              memory: 2GB
+    softunibazar:
+        ports:
+            - '80:80'
+       # network_mode: bazar
+        container_name: martin8207bazar
+     #   build:
+      #    dockerfile: ./Dockerfile
+        image: martin8207bazarscr.azurecr.io/martinbazar
+        domainname: martin8207
+        restart: on-failure
+volumes:
+  sqldata:
+    driver: azure_file
+    driver_opts:
+      share_name: sql-volume
+      storage_account_name: martin8207bazarsa
